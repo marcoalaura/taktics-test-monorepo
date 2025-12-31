@@ -1,0 +1,139 @@
+<section class="forms-basic">
+  <div class="page-header">
+    <h1>Budget List</h1>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="panel panel-default" style="margin-bottom: 20px;">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Name</label>
+            <input
+              type="text"
+              class="form-control"
+              ng-model="vm.filters.name"
+              ng-change="vm.applyFilters()"
+              placeholder="Filter by name"
+            />
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Client</label>
+            <input
+              type="text"
+              class="form-control"
+              ng-model="vm.filters.clientName"
+              ng-change="vm.applyFilters()"
+              placeholder="Filter by client"
+            />
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>From</label>
+            <input
+              type="date"
+              class="form-control"
+              ng-model="vm.filters.dateFrom"
+              ng-change="vm.applyFilters()"
+            />
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>To</label>
+            <input
+              type="date"
+              class="form-control"
+              ng-model="vm.filters.dateTo"
+              ng-change="vm.applyFilters()"
+            />
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button
+              class="btn btn-default btn-block"
+              ng-click="vm.clearFilters()"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budgets Table -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="panel-title">Budgets</h3>
+        </div>
+        <div class="col-md-6 text-right">
+          <button class="btn btn-primary" ng-click="vm.createBudget()" style="background-color: #ff9800; border-color: #ff9800;">
+            Create Budget
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Thumbnail</th>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Total Cost</th>
+              <th>Total Sale</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="budget in vm.filteredBudgets">
+              <td>{{ budget.name }}</td>
+              <td>
+                <img
+                  ng-if="budget.thumbnail"
+                  ng-src="{{ budget.thumbnail }}"
+                  alt="Thumbnail"
+                  style="max-width: 50px; max-height: 50px;"
+                />
+                <span ng-if="!budget.thumbnail">-</span>
+              </td>
+              <td>{{ vm.formatDate(budget.date) }}</td>
+              <td>{{ budget.clientName }}</td>
+              <td>{{ budget.totalCostImport | number:2 }}€</td>
+              <td>{{ budget.totalSaleImport | number:2 }}€</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  ng-click="vm.editBudget(budget)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  ng-click="vm.deleteBudget(budget)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr ng-if="vm.filteredBudgets.length === 0">
+              <td colspan="7" class="text-center">No budgets found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+

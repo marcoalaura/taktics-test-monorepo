@@ -1,0 +1,97 @@
+<div class="modal-header">
+  <h3 class="modal-title">NUEVO PRESUPUESTO</h3>
+  <button type="button" class="close" ng-click="vm.cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+  <form name="createBudgetForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>
+            Nombre <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            ng-model="vm.budget.name"
+            placeholder="Indica el título"
+            required
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Fecha <span class="text-danger">*</span></label>
+          <input
+            type="date"
+            class="form-control"
+            ng-model="vm.budget.date"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>
+            Cliente <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            ng-model="vm.budget.clientName"
+            placeholder="Selecciona un cliente"
+            required
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Thumbnail (URL)</label>
+          <input
+            type="text"
+            class="form-control"
+            ng-model="vm.budget.thumbnail"
+            placeholder="URL de la imagen"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="vm.budget.thumbnail">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Vista previa:</label>
+          <div>
+            <img
+              ng-src="{{ vm.budget.thumbnail }}"
+              alt="Thumbnail preview"
+              style="max-width: 200px; max-height: 200px; border: 1px solid #ddd; padding: 5px;"
+              onerror="this.style.display='none'"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="vm.cancel()">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    ng-click="vm.create()"
+    ng-disabled="vm.creating || !vm.budget.name || !vm.budget.clientName || !vm.budget.date"
+    style="background-color: #ff9800; border-color: #ff9800;"
+  >
+    <span ng-if="!vm.creating">CREAR PRESUPUESTO</span>
+    <span ng-if="vm.creating">Creando...</span>
+  </button>
+</div>
+

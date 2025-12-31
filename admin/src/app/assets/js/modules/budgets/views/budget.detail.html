@@ -1,0 +1,308 @@
+<section class="forms-basic">
+  <div class="page-header">
+    <h1>{{ vm.isNew ? 'Create Budget' : 'Budget Detail' }}</h1>
+  </div>
+
+  <!-- Budget Form Section -->
+  <div class="panel panel-default" style="margin-bottom: 20px;">
+    <div class="panel-heading">
+      <h3 class="panel-title">Budget Information</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Thumbnail</label>
+            <div style="margin-bottom: 10px;">
+              <img
+                ng-if="vm.budget.thumbnail"
+                ng-src="{{ vm.budget.thumbnail }}"
+                alt="Thumbnail"
+                style="max-width: 200px; max-height: 200px; border: 1px solid #ddd; padding: 5px;"
+              />
+              <div ng-if="!vm.budget.thumbnail" style="width: 200px; height: 200px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; background: #f5f5f5;">
+                <span>No thumbnail</span>
+              </div>
+            </div>
+            <input
+              type="file"
+              id="thumbnailUpload"
+              accept="image/*"
+              style="display: none;"
+              onchange="angular.element(this).scope().vm.handleFileSelect(this.files)"
+            />
+            <div>
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                ng-click="vm.triggerFileUpload()"
+              >
+                Upload
+              </button>
+              <button
+                class="btn btn-sm btn-danger"
+                ng-click="vm.deleteThumbnail()"
+                ng-if="vm.budget.thumbnail"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Client <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="vm.budget.clientName"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Name <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="vm.budget.name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Date <span class="text-danger">*</span></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  ng-model="vm.budget.date"
+                  ng-model-options="{ timezone: 'UTC' }"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Cost</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="vm.budget.totalCostImport"
+                  readonly
+                  style="background-color: #f5f5f5;"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Sale</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="vm.budget.totalSaleImport"
+                  readonly
+                  style="background-color: #f5f5f5;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapters and Batches Table Section -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="panel-title">Chapters and Batches</h3>
+        </div>
+        <div class="col-md-6 text-right">
+          <button class="btn btn-primary" ng-click="vm.addChapter()">
+            Add Chapter
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Description</th>
+              <th>Labour Coefficient</th>
+              <th>Material Coefficient</th>
+              <th>Quantity</th>
+              <th>Labour Cost</th>
+              <th>Material Cost</th>
+              <th>Unit Cost</th>
+              <th>Unit Sale</th>
+              <th>Total Cost</th>
+              <th>Total Sale</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="item in vm.flatItems"
+              ng-class="{'info': vm.isChapter(item), '': vm.isBatch(item)}"
+            >
+              <!-- Rank -->
+              <td>{{ item.data.rank }}</td>
+
+              <!-- Description -->
+              <td>
+                <input
+                  type="text"
+                  class="form-control input-sm"
+                  ng-model="item.data.description"
+                  ng-change="vm.updateItem(item)"
+                  ng-class="{'bg-info': vm.isChapter(item)}"
+                />
+              </td>
+
+              <!-- Labour Coefficient (only for chapters) -->
+              <td>
+                <input
+                  ng-if="vm.isChapter(item)"
+                  type="number"
+                  step="0.1"
+                  class="form-control input-sm"
+                  ng-model="item.data.labourSaleCoefficient"
+                  ng-change="vm.updateItem(item)"
+                />
+                <span ng-if="vm.isBatch(item)">-</span>
+              </td>
+
+              <!-- Material Coefficient (only for chapters) -->
+              <td>
+                <input
+                  ng-if="vm.isChapter(item)"
+                  type="number"
+                  step="0.1"
+                  class="form-control input-sm"
+                  ng-model="item.data.materialSaleCoefficient"
+                  ng-change="vm.updateItem(item)"
+                />
+                <span ng-if="vm.isBatch(item)">-</span>
+              </td>
+
+              <!-- Quantity (only for batches) -->
+              <td>
+                <input
+                  ng-if="vm.isBatch(item)"
+                  type="number"
+                  step="0.1"
+                  class="form-control input-sm"
+                  ng-model="item.data.amount"
+                  ng-change="vm.updateItem(item)"
+                />
+                <span ng-if="vm.isChapter(item)">-</span>
+              </td>
+
+              <!-- Labour Cost (only for batches) -->
+              <td>
+                <input
+                  ng-if="vm.isBatch(item)"
+                  type="number"
+                  step="0.01"
+                  class="form-control input-sm"
+                  ng-model="item.data.labourCostImport"
+                  ng-change="vm.updateItem(item)"
+                />
+                <span ng-if="vm.isChapter(item)">-</span>
+              </td>
+
+              <!-- Material Cost (only for batches) -->
+              <td>
+                <input
+                  ng-if="vm.isBatch(item)"
+                  type="number"
+                  step="0.01"
+                  class="form-control input-sm"
+                  ng-model="item.data.materialCostImport"
+                  ng-change="vm.updateItem(item)"
+                />
+                <span ng-if="vm.isChapter(item)">-</span>
+              </td>
+
+              <!-- Unit Cost (only for batches) -->
+              <td>
+                <span ng-if="vm.isBatch(item)">{{ item.data.unitaryCostImport | number:2 }}€</span>
+                <span ng-if="vm.isChapter(item)">-</span>
+              </td>
+
+              <!-- Unit Sale (only for batches) -->
+              <td>
+                <span ng-if="vm.isBatch(item)">{{ item.data.unitarySaleCost | number:2 }}€</span>
+                <span ng-if="vm.isChapter(item)">-</span>
+              </td>
+
+              <!-- Total Cost -->
+              <td>
+                <span ng-if="vm.isChapter(item)">{{ item.data.totalCostImport | number:2 }}€</span>
+                <span ng-if="vm.isBatch(item)">{{ item.data.totalCostImport | number:2 }}€</span>
+              </td>
+
+              <!-- Total Sale -->
+              <td>
+                <span ng-if="vm.isChapter(item)">{{ item.data.totalSaleImport | number:2 }}€</span>
+                <span ng-if="vm.isBatch(item)">{{ item.data.totalSaleImport | number:2 }}€</span>
+              </td>
+
+              <!-- Actions -->
+              <td>
+                <div ng-if="vm.isChapter(item)">
+                  <button
+                    class="btn btn-xs btn-success"
+                    ng-click="vm.addBatch(item.data)"
+                  >
+                    Add Batch
+                  </button>
+                  <button
+                    class="btn btn-xs btn-danger"
+                    ng-click="vm.deleteChapter(item.data)"
+                  >
+                    Delete Chapter
+                  </button>
+                </div>
+                <div ng-if="vm.isBatch(item)">
+                  <button
+                    class="btn btn-xs btn-danger"
+                    ng-click="vm.deleteBatch(item.data, item.chapterId)"
+                  >
+                    Delete Batch
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr ng-if="vm.flatItems.length === 0">
+              <td colspan="12" class="text-center">
+                No chapters or batches. Click "Add Chapter" to get started.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-click="vm.saveBudget()">
+        {{ vm.isNew ? 'Create' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,78 @@
+{
+  "name": "Batch",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "rank": {
+      "type": "number",
+      "required": true,
+      "description": "Position of the batch inside the chapter"
+    },
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "amount": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "materialCostImport": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "labourCostImport": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "unitaryCostImport": {
+      "type": "number",
+      "description": "Calculated: materialCostImport + labourCostImport"
+    },
+    "totalCostImport": {
+      "type": "number",
+      "description": "Calculated: unitaryCostImport * amount"
+    },
+    "unitarySaleCost": {
+      "type": "number",
+      "description": "Calculated: materialCostImport * materialSaleCoefficient + labourCostImport * labourSaleCoefficient"
+    },
+    "totalSaleImport": {
+      "type": "number",
+      "description": "Calculated: unitarySaleCost * amount"
+    },
+    "chapterId": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "chapter": {
+      "type": "belongsTo",
+      "model": "Chapter",
+      "foreignKey": "chapterId"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
+}
+

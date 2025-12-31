@@ -21,7 +21,8 @@ export default function menuLink() {
   function link(scope, element, attrs, linkCtrl) {
     if (linkCtrl.isSelected(attrs.href)) linkCtrl.setBreadcrumb(attrs.name);
 
-    element.click(function () {
+    // Use on() instead of click() for jqLite compatibility
+    element.on('click', function () {
       linkCtrl.setBreadcrumb(attrs.name);
     });
 

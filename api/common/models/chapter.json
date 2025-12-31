@@ -1,0 +1,72 @@
+{
+  "name": "Chapter",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "rank": {
+      "type": "number",
+      "required": true,
+      "description": "Position of the chapter in the budget"
+    },
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "materialSaleCoefficient": {
+      "type": "number",
+      "required": true,
+      "default": 1.0,
+      "description": "Sale coefficient for material cost"
+    },
+    "labourSaleCoefficient": {
+      "type": "number",
+      "required": true,
+      "default": 1.0,
+      "description": "Sale coefficient for labour cost"
+    },
+    "totalCostImport": {
+      "type": "number",
+      "description": "Calculated: sum of all batches totalCostImport"
+    },
+    "totalSaleImport": {
+      "type": "number",
+      "description": "Calculated: sum of all batches totalSaleImport"
+    },
+    "budgetId": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "budget": {
+      "type": "belongsTo",
+      "model": "Budget",
+      "foreignKey": "budgetId"
+    },
+    "batches": {
+      "type": "hasMany",
+      "model": "Batch",
+      "foreignKey": "chapterId"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
+}
+

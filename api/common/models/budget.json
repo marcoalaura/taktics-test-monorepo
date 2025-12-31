@@ -1,0 +1,58 @@
+{
+  "name": "Budget",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "thumbnail": {
+      "type": "string",
+      "description": "Image URL for the budget thumbnail"
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "clientName": {
+      "type": "string",
+      "required": true
+    },
+    "totalCostImport": {
+      "type": "number",
+      "description": "Calculated: sum of all chapters totalCostImport"
+    },
+    "totalSaleImport": {
+      "type": "number",
+      "description": "Calculated: sum of all chapters totalSaleImport"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "chapters": {
+      "type": "hasMany",
+      "model": "Chapter",
+      "foreignKey": "budgetId"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
+}
+
